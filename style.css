@@ -1,0 +1,12 @@
+
+.lentele a{
+    color:darkred;
+    background-color: #fff;
+    padding: 5px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.lentele a:hover{
+    background-color: darkred;
+    color:#fff;
+}
