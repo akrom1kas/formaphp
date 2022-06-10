@@ -105,14 +105,6 @@ if ($logged)
     ?>
     <?php
 
-    // prisijungti
-
-    $conn = new mysqli($server, $user, $password, $dbname);
-    if ($conn->connect_error) die("Negaliu prisijungti:" . $conn->connect_error);
-
-    ?>
-
-<?php
 if ($logged) {
     $num = mysqli_num_rows($query);
     if ($num > 0) {
@@ -176,10 +168,10 @@ else
                 <div class="col-lg-8">
                     <div class="card-body py-5 px-md-5">
 
-                        <form method="post" action="" name="signin-form">
-                            <!-- Email input -->
+                        <form method="post" name="signin-form">
+                            <!-- username input -->
                             <div class="form-outline mb-4">
-                                <input type="text" name="username" id="form2Example1" class="form-control" />
+                                <input type="username" name="username" id="form2Example1" class="form-control" />
                                 <label class="form-label" for="form2Example1">Username</label>
                             </div>
 
@@ -207,6 +199,9 @@ else
 
                             <!-- Submit button -->
                             <button type="submit" class="btn btn-primary btn-block mb-4"name="login" value="login">Log In</button>
+                            <p>
+                                Not yet a member? <a href="register.php">Sign up</a>
+                            </p>
 
                         </form>
 
