@@ -47,28 +47,31 @@ else
         }
     }
 }
-
-if ($logged){
+if ($logged) {
 
     if($_POST !=null)
     {
-        $vardas = $_POST['vardas'];
-        $epastas = $_POST['epastas'];
-        $zinute = $_POST['zinute'];
+        if (!empty($_POST['vardas']) && !empty($_POST['epastas']) && !empty($_POST['zinute'])) {
 
+            $vardas = $_POST['vardas'];
+            $epastas = $_POST['epastas'];
+            $zinute = $_POST['zinute'];
 
-        $sql = 'INSERT INTO mindaugas (id,vardas, epastas, zinute, ip, laikas)
-    VALUES ("'.$id.'","'.$vardas.'", "'.$epastas.'", "'.$zinute.'", "'.$_SERVER['REMOTE_ADDR'].'", NOW())';
+            $sql = 'INSERT INTO mindaugas (id,vardas, epastas, zinute, ip, laikas)
+    VALUES ("' . $id . '","' . $vardas . '", "' . $epastas . '", "' . $zinute . '", "' . $_SERVER['REMOTE_ADDR'] . '", NOW())';
 
-        if (!$result = $conn->query($sql)) die("Negaliu irasyti:" . $conn->error);
-        header("Location: index.php");
-        die();
+            if (!$result = $conn->query($sql)) die("Negaliu irasyti:" . $conn->error);
+            header("Location: index.php");
+            die();
+        }
     }
 }
 $_SESSION
 
 ?>
+<?php
 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,6 +81,7 @@ $_SESSION
     <title>Laboratorinis darbas</title>
 </head>
 <body>
+
 <?php
 if ($logged)
 {
@@ -89,6 +93,7 @@ if ($logged)
 <?php
 if ($logged)
 {
+
 ?>
 <table class="table table-striped table-dark">
     <tr>
@@ -129,9 +134,9 @@ if ($logged) {
     if ($logged)
 {
 ?>
-    <form action='index.php' method='post' class="forma" >
-        Vardas:<input name="vardas" type="text" id="vardas" required><br><br>
-        E.pastas:<input name="epastas" type="text" id="epastas" required><br><br>
+    <form action='index.php' method='Post' class="forma" >
+        Vardas:<input name="vardas" type="text" id="vardas" ><br><br>
+        E.pastas:<input name="epastas" type="text" id="epastas" ><br><br>
         Zinute:<textarea name="zinute"> </textarea><br><br>
         <input type="submit" class="btn btn-primary" value="Submit">
         <input type="reset" class="btn btn-secondary ml-2" value="Reset">
@@ -204,8 +209,7 @@ else
                             </p>
 
                         </form>
-
-                    </div>
+    </div>
                 </div>
             </div>
         </div>
