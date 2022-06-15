@@ -67,10 +67,6 @@ if ($logged) {
     }
 }
 $_SESSION
-
-?>
-<?php
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,7 +82,7 @@ $_SESSION
 if ($logged)
 {
 ?>
-<a href='logout.php'><button>Logout</button> </a>
+    Logout? click <a href="logout.php">here</a>
 <?php
 }
 ?>
@@ -134,10 +130,10 @@ if ($logged) {
     if ($logged)
 {
 ?>
-    <form action='index.php' method='Post' class="forma" >
-        Vardas:<input name="vardas" type="text" id="vardas" ><br><br>
-        E.pastas:<input name="epastas" type="text" id="epastas" ><br><br>
-        Zinute:<textarea name="zinute"> </textarea><br><br>
+    <form action='index.php' method='Post' class="card-body py-5 px-md-5" >
+        Vardas:<br> <input name="vardas" type="text" id="vardas" ><br><br>
+        E.pastas:<br> <input name="epastas" type="text" id="epastas" ><br><br>
+        Zinute:<br> <textarea name="zinute"> </textarea><br><br>
         <input type="submit" class="btn btn-primary" value="Submit">
         <input type="reset" class="btn btn-secondary ml-2" value="Reset">
     </form>
@@ -147,7 +143,10 @@ else
 {
 ?>
     <!-- Section: Design Block -->
-    <section class=" text-center text-lg-start">
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="card-body p-md-5">
         <style>
             .rounded-t-5 {
                 border-top-left-radius: 0.5rem;
@@ -204,6 +203,7 @@ else
 
                             <!-- Submit button -->
                             <button type="submit" class="btn btn-primary btn-block mb-4"name="login" value="login">Log In</button>
+
                             <p>
                                 Not yet a member? <a href="register.php">Sign up</a>
                             </p>
