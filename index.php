@@ -4,15 +4,6 @@ $user="root";
 $password="adminas";
 $dbname="test";
 
-include "connection.php";
-
-if (isset($_GET['id'])){
-    $id=$_GET['id'];
-    $delete=mysqli_query($connection,"DELETE FROM `mindaugas` WHERE `id`= '$id'");
-}
-
-$select="SELECT * FROM mindaugas";
-$query=mysqli_query($connection, $select);
 
 ?>
 
@@ -35,7 +26,7 @@ else
     {
         if(!empty($_POST['username']) && !empty($_POST['password']))
         {
-            $sql = "SELECT * FROM users where username ='".$_POST['username']."' and password = '".$_POST['password']."'";
+            $sql = "SELECT * FROM users where username ='".$_POST['username']."' and password = '".hash('sha1', $_POST['password'])."'";
             $result = mysqli_query($conn, $sql);
             while ($row = mysqli_fetch_array($result))
             {
@@ -47,18 +38,20 @@ else
         }
     }
 }
+
+
 if ($logged) {
 
     if($_POST !=null)
     {
-        if (!empty($_POST['vardas']) && !empty($_POST['epastas']) && !empty($_POST['zinute'])) {
+        if (!empty($_POST['zinute'])) {
 
-            $vardas = $_POST['vardas'];
-            $epastas = $_POST['epastas'];
+//            $vardas = $_POST['vardas'];
+//            $epastas = $_POST['epastas'];
             $zinute = $_POST['zinute'];
 
-            $sql = 'INSERT INTO mindaugas (id,vardas, epastas, zinute, ip, laikas)
-    VALUES ("' . $id . '","' . $vardas . '", "' . $epastas . '", "' . $zinute . '", "' . $_SERVER['REMOTE_ADDR'] . '", NOW())';
+            $sql = "INSERT INTO mindaugas (vardas, epastas, zinute, ip, laikas)
+    VALUES ('".$_SESSION['user']['username']."','".$_SESSION['user']['email']."','".$_POST['zinute']."','".$_SERVER['REMOTE_ADDR']."',NOW())";
 
             if (!$result = $conn->query($sql)) die("Negaliu irasyti:" . $conn->error);
             header("Location: index.php");
@@ -66,6 +59,19 @@ if ($logged) {
         }
     }
 }
+// Delete post //
+
+include "connection.php";
+
+if (isset($_GET['id'])){
+    $id=$_GET['id'];
+    $delete=mysqli_query($connection,"DELETE FROM `mindaugas` WHERE id= '$id'");
+}
+
+$select="SELECT * FROM mindaugas";
+$query=mysqli_query($connection, $select);
+
+
 $_SESSION
 ?>
 <!DOCTYPE html>
@@ -81,9 +87,9 @@ $_SESSION
 <?php
 if ($logged)
 {
-?>
+    ?>
     Logout? click <a href="logout.php">here</a>
-<?php
+    <?php
 }
 ?>
 <?php
@@ -106,11 +112,11 @@ if ($logged)
     ?>
     <?php
 
-if ($logged) {
-    $num = mysqli_num_rows($query);
-    if ($num > 0) {
-        while ($result = mysqli_fetch_assoc($query)) {
-            echo "  
+    if ($logged) {
+        $num = mysqli_num_rows($query);
+        if ($num > 0) {
+            while ($result = mysqli_fetch_assoc($query)) {
+                echo "  
                  <tr class='lentele'>
                     <td>" . $result['id'] . "</td>
                     <td>" . $result['vardas'] . "</td>
@@ -120,102 +126,102 @@ if ($logged) {
                     <td>" . $result["laikas"] . "</td>
                     <td><a href='index.php?id=" . $result['id'] . "'>Delete</a></td>
                     </tr>";
+            }
         }
     }
-}
     ?>
-  </table>
+</table>
 
 <?php
-    if ($logged)
+if ($logged)
 {
-?>
+    ?>
     <form action='index.php' method='Post' class="card-body py-5 px-md-5" >
-        Vardas:<br> <input name="vardas" type="text" id="vardas" ><br><br>
-        E.pastas:<br> <input name="epastas" type="text" id="epastas" ><br><br>
+<!--        Vardas:<br><input name="vardas" type="text" value="--><?php //echo $_SESSION['user']['username']; ?><!--"<br><br>-->
+<!--                E.pastas:<br> <input name="epastas" type="text"  ><br><br>-->
         Zinute:<br> <textarea name="zinute"> </textarea><br><br>
         <input type="submit" class="btn btn-primary" value="Submit">
         <input type="reset" class="btn btn-secondary ml-2" value="Reset">
     </form>
-<?php
+    <?php
 }
 else
 {
-?>
+    ?>
     <!-- Section: Design Block -->
     <section class="vh-100" style="background-color: #eee;">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="card-body p-md-5">
-        <style>
-            .rounded-t-5 {
-                border-top-left-radius: 0.5rem;
-                border-top-right-radius: 0.5rem;
-            }
+                    <style>
+                        .rounded-t-5 {
+                            border-top-left-radius: 0.5rem;
+                            border-top-right-radius: 0.5rem;
+                        }
 
-            @media (min-width: 992px) {
-                .rounded-tr-lg-0 {
-                    border-top-right-radius: 0;
-                }
+                        @media (min-width: 992px) {
+                            .rounded-tr-lg-0 {
+                                border-top-right-radius: 0;
+                            }
 
-                .rounded-bl-lg-5 {
-                    border-bottom-left-radius: 0.5rem;
-                }
-            }
-        </style>
-        <div class="card mb-3">
-            <div class="row g-0 d-flex align-items-center">
-                <div class="col-lg-4 d-none d-lg-flex">
-                    <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Trendy Pants and Shoes"
-                         class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
-                </div>
-                <div class="col-lg-8">
-                    <div class="card-body py-5 px-md-5">
-
-                        <form method="post" name="signin-form">
-                            <!-- username input -->
-                            <div class="form-outline mb-4">
-                                <input type="username" name="username" id="form2Example1" class="form-control" />
-                                <label class="form-label" for="form2Example1">Username</label>
+                            .rounded-bl-lg-5 {
+                                border-bottom-left-radius: 0.5rem;
+                            }
+                        }
+                    </style>
+                    <div class="card mb-3">
+                        <div class="row g-0 d-flex align-items-center">
+                            <div class="col-lg-4 d-none d-lg-flex">
+                                <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Trendy Pants and Shoes"
+                                     class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
                             </div>
+                            <div class="col-lg-8">
+                                <div class="card-body py-5 px-md-5">
 
-                            <!-- Password input -->
-                            <div class="form-outline mb-4">
-                                <input type="password" name="password" id="form2Example2" class="form-control" />
-                                <label class="form-label" for="form2Example2">Password</label>
-                            </div>
+                                    <form method="post" name="signin-form">
+                                        <!-- username input -->
+                                        <div class="form-outline mb-4">
+                                            <input type="username" name="username" id="form2Example1" class="form-control" />
+                                            <label class="form-label" for="form2Example1">Username</label>
+                                        </div>
 
-                            <!-- 2 column grid layout for inline styling -->
-                            <div class="row mb-4">
-                                <div class="col d-flex justify-content-center">
-                                    <!-- Checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                                        <label class="form-check-label" for="form2Example31"> Remember me </label>
-                                    </div>
+                                        <!-- Password input -->
+                                        <div class="form-outline mb-4">
+                                            <input type="password" name="password" id="form2Example2" class="form-control" />
+                                            <label class="form-label" for="form2Example2">Password</label>
+                                        </div>
+
+                                        <!-- 2 column grid layout for inline styling -->
+                                        <div class="row mb-4">
+                                            <div class="col d-flex justify-content-center">
+                                                <!-- Checkbox -->
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                                                    <label class="form-check-label" for="form2Example31"> Remember me </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <!-- Simple link -->
+                                                <a href="#!">Forgot password?</a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit button -->
+                                        <button type="submit" class="btn btn-primary btn-block mb-4"name="login" value="login">Log In</button>
+
+                                        <p>
+                                            Not yet a member? <a href="register.php">Sign up</a>
+                                        </p>
+
+                                    </form>
                                 </div>
-
-                                <div class="col">
-                                    <!-- Simple link -->
-                                    <a href="#!">Forgot password?</a>
-                                </div>
                             </div>
-
-                            <!-- Submit button -->
-                            <button type="submit" class="btn btn-primary btn-block mb-4"name="login" value="login">Log In</button>
-
-                            <p>
-                                Not yet a member? <a href="register.php">Sign up</a>
-                            </p>
-
-                        </form>
-    </div>
-                </div>
-            </div>
-        </div>
+                        </div>
+                    </div>
     </section>
     <!-- Section: Design Block -->
-<?php
+    <?php
 }
 ?>
 </body>

@@ -1,7 +1,7 @@
 <?php
 $username = $_POST['username'];
 $email = $_POST['email'];
-$password = $_POST['password'];
+$password = hash('sha1', $_POST['password']);
 $errors = array();
 
 $conn = new mysqli('localhost','root','adminas', 'test');
@@ -16,7 +16,7 @@ else
     $result = $stmt->get_result(); // get the mysqli result
     $user = $result->fetch_assoc();
 
-    if (count($user) > 0) { // if user exists
+    if (is_array($user) && count($user) > 0) { // if user exists
             array_push($errors, "User already exists");
         echo "User already exists";
     }
