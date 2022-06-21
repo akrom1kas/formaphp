@@ -40,7 +40,6 @@
                     </tr>";
 
         }
-
         $conn->close();
         ?>
     </table>

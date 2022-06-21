@@ -1,13 +1,10 @@
+
 <?php
 $server="localhost";
 $user="root";
 $password="adminas";
 $dbname="test";
 
-
-?>
-
-<?php
 SESSION_START();
 
 $conn = new mysqli($server, $user, $password, $dbname);
@@ -32,7 +29,7 @@ else
             {
                 $_SESSION['user'] = $row;
                 header('Location: index.php');
-                die();
+                exit();
             }
 
         }
@@ -42,6 +39,7 @@ else
 
 if ($logged) {
 
+    print_r($_SESSION);
     if($_POST !=null)
     {
         if (!empty($_POST['zinute'])) {
@@ -60,16 +58,21 @@ if ($logged) {
     }
 }
 // Delete post //
-
 include "connection.php";
 
-if (isset($_GET['id'])){
-    $id=$_GET['id'];
-    $delete=mysqli_query($connection,"DELETE FROM `mindaugas` WHERE id= '$id'");
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = $_GET['id'];
+    $delete = mysqli_query($connection, "DELETE FROM `mindaugas` WHERE id= '$id' and epastas = '".$_SESSION['user']['email']."'");
+//
+//// delete the entry if admin
+//    if ($_SESSION['username'] == 'adminas') {
+//        $result = mysql_query("DELETE FROM mindaugas WHERE id='$id'") or die(mysql_error());
 }
-
-$select="SELECT * FROM mindaugas";
+//}
+$select="SELECT * FROM `mindaugas`";
 $query=mysqli_query($connection, $select);
+
+
 
 
 $_SESSION
@@ -88,7 +91,14 @@ $_SESSION
 if ($logged)
 {
     ?>
-    Logout? click <a href="logout.php">here</a>
+    <nav class="navbar navbar-dark bg-dark">
+        <ul>
+            <li><a href="#">Admin</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="logout.php">Logout</a></a></li>
+            <li><span><a href="#">Welcome <?php echo $_SESSION['user']['username']; ?></a></span></li>
+        </ul>
+    </nav>
     <?php
 }
 ?>
@@ -97,6 +107,13 @@ if ($logged)
 {
 
 ?>
+
+    <form name="Table Properties" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <button type="submit" name="sort_week" class="button" value="1"> Sort Week </button>
+    </form>
+<?php if($_POST['sort_week'] === true) {
+    "SELECT * FROM `mindaugas` ORDER BY `mindaugas`.`vardas` ASC|DESC";
+}?>
 <table class="table table-striped table-dark">
     <tr>
         <td>ID</td>
@@ -111,7 +128,6 @@ if ($logged)
     }
     ?>
     <?php
-
     if ($logged) {
         $num = mysqli_num_rows($query);
         if ($num > 0) {
@@ -119,13 +135,14 @@ if ($logged)
                 echo "  
                  <tr class='lentele'>
                     <td>" . $result['id'] . "</td>
-                    <td>" . $result['vardas'] . "</td>
-                    <td>" . $result['epastas'] . "</td>
+                    <td>" . $result['vardas'] . " </td>
+                    <td>" . $result['epastas'] . " </td>
                     <td>" . $result["zinute"] . "</td>
                     <td>" . $result["ip"] . "</td>
                     <td>" . $result["laikas"] . "</td>
-                    <td><a href='index.php?id=" . $result['id'] . "'>Delete</a></td>
+                    <td>".($result['epastas'] == $_SESSION['user']['email'] ? "<a href='index.php?id=" . $result['id'] . "'>Delete</a>" : "" )."</td>
                     </tr>";
+
             }
         }
     }
