@@ -26,10 +26,16 @@
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px 16px;
     text-decoration: none;
 }
 .navbar li a:hover{
-    background-color: #111;
+    background-color: #222;
     border-radius: 10px;
+}
+.split li a{
+    float: right;
+}
+.paieska{
+    margin-left: 1550px;
 }
